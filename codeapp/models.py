@@ -4,6 +4,6 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from datetime import datetime
 
-
+@dataclass
 class Dummy:  # TODO: this class is to be removed
     pass
