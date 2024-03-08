@@ -2,8 +2,22 @@
 {% block content %}
 <h1 id="homepage_header">Final project</h1>
 
-<!-- TODO -->
-<h2>Insert your table here!</h2>
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Order Priority</th>
+            <th>Number</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for priority, count in priority_count.items() %}
+        <tr>
+            <td>{{ priority }}</td>
+            <td>{{ count }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 
 <img src="{{ url_for('bp.image') }}" class="rounded mx-auto d-block" alt="Plot with analysis">
 

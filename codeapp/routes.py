@@ -13,8 +13,9 @@ from flask.wrappers import Response as FlaskResponse
 from matplotlib.figure import Figure
 from werkzeug.wrappers.response import Response as WerkzeugResponse
 
+from codeapp.models import EuropeSalesRecords
+
 # internal imports
-import codeapp.models as models
 from codeapp.utils import calculate_statistics, get_data_list, prepare_figure
 
 # define the response type
@@ -26,19 +27,27 @@ bp = Blueprint("bp", __name__, url_prefix="/")
 ################################### web page routes ####################################
 
 
-@bp.get("/")  # root route
+@bp.get("/")
 def home() -> Response:
-    # TODO
-    pass
+    dataset: list[EuropeSalesRecords] = get_data_list()
+    priority_count: dict[str, int] = calculate_statistics(dataset)
+    return render_template("home.html", priority_count=priority_count)
 
 
 @bp.get("/image")
 def image() -> Response:
-    # creating the plot
+    dataset: list[EuropeSalesRecords] = get_data_list()
+    priority_count: dict[str, int] = calculate_statistics(dataset)
+
     fig = Figure()
-
-    # TODO: populate the plot
-
+    ax = fig.add_subplot(111)
+    ax.pie(
+        list(priority_count.values()),
+        labels=[str(label) for label in priority_count],
+        autopct="%1.1f%%",
+        startangle=140,
+    )
+    ax.axis("equal")
     ################ START -  THIS PART MUST NOT BE CHANGED BY STUDENTS ################
     # create a string buffer to hold the final code for the plot
     output = io.StringIO()
@@ -58,11 +67,12 @@ def about() -> Response:
 
 @bp.get("/json-dataset")
 def get_json_dataset() -> Response:
-    # TODO
-    pass
+    dataset: list[EuropeSalesRecords] = get_data_list()
+    return jsonify(dataset)
 
 
 @bp.get("/json-stats")
 def get_json_stats() -> Response:
-    # TODO
-    pass
+    dataset: list[EuropeSalesRecords] = get_data_list()
+    stats: dict[str, int] = calculate_statistics(dataset)
+    return jsonify(stats)
